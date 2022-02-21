@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Produto {
+  id             Int             @id @unique @default(autoincrement())
+  produto1       String          @unique
+  nome           String
+  descricao      String
+  colecao        String
+  grife          String
+  disponivel     Int
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  ProdutosPrecos ProdutosPrecos?
+}
+
+model ProdutosPrecos {
+  id               Int      @id @unique @default(autoincrement())
+  codigo           Int
+  produtoid        String   @unique
+  preco1           Float
+  limitedesconto   Int
+  promocaodesconto Int
+  precoliquido1    Float
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  Produto          Produto  @relation(fields: [produtoid], references: [produto1])
+}
+
+model Role {
+  id      Int       @id @unique @default(autoincrement())
+  role    Boolean
+  usuario Usuario[]
+}
+
+model Usuario {
+  id         Int      @id @unique @default(autoincrement())
+  nome       String
+  email      String   @unique
+  senha      String
+  isAdmin    Int
+  created_at DateTime @default(now())
+  role       Role     @relation(fields: [isAdmin], references: [id])
+}
+
+model Log {
+  id            Int      @id @unique @default(autoincrement())
+  idUser        String
+  idProduto     String  
+  campoAlterado String
+  valorOriginal String
+  valorAlterado String
+  created_at    DateTime @default(now())
+}

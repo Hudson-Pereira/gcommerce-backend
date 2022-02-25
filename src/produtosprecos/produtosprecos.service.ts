@@ -29,9 +29,9 @@ export class ProdutosprecosService {
     if(!total) {
       console.log("Nenhum item encontrado.")
       throw new HttpException("Nenhum item encontrado", HttpStatus.NOT_FOUND);
-    
+    }
     return total;
-      }
+      
     } catch(error) {
       console.error(error)
       throw new HttpException("ERRO", HttpStatus.BAD_REQUEST);    

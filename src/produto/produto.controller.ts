@@ -9,6 +9,8 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { ProdutoService } from "./produto.service";
 import { CreateProdutoDto } from "./dto/create-produto.dto";
@@ -52,9 +54,15 @@ export class ProdutoController {
   @UseGuards(AuthGuard("jwt"))
   @UseInterceptors(FileInterceptor("upload"))
   uploadFile(@UploadedFile() file: Express.Multer.File): Promise<void> {
-    const workSheetsFromFile = xlsx.parse(file.path);
-    const dados = workSheetsFromFile[0].data
+    try {
+      const workSheetsFromFile = xlsx.parse(file.path);
+      const dados = workSheetsFromFile[0].data
     return this.produtoService.uploadFilePrisma(dados);
+    } catch(error){
+      console.error(error)
+       throw new HttpException("ERRO", HttpStatus.BAD_REQUEST); 
+    } 
+    
   }
 
   @Delete(":id")

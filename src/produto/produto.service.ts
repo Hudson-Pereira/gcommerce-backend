@@ -25,7 +25,7 @@ export class ProdutoService {
   async findAllPrisma(): Promise<Produto[]> {
     try{
     const total = await this.prisma.produto.findMany();
-    console.log(`Temos ${total.length}`)
+    console.log(`Temos ${total.length} produtos.`)
     if(!total) {
       console.log("Nenhum item encontrado.")
       throw new HttpException("Nenhum item encontrado", HttpStatus.NOT_FOUND);
@@ -106,6 +106,7 @@ async uploadFilePrisma(dados:any) {
   )})
     } catch(error) {
       console.error(error)
+      throw new HttpException("ERRO", HttpStatus.BAD_REQUEST); 
     }
 }
 

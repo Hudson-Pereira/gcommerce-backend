@@ -26,7 +26,7 @@ export class UsuarioService {
   }
 
   async findByLogin(login: LoginDto): Promise<Usuario> {
-    try{
+    
     const user = await this.prisma.usuario.findFirst({
       where: {
         email: login.email,
@@ -48,12 +48,7 @@ export class UsuarioService {
         HttpStatus.UNAUTHORIZED
       );
     }
-
-    return user;
-  } catch(error){
-    console.error(error)
-    throw new HttpException("ERRO", HttpStatus.BAD_REQUEST)
-  }
+    return user
   }
 
   async validateUser(payload: JwtPayload): Promise<Usuario> {
@@ -115,6 +110,16 @@ export class UsuarioService {
     }
   
   async remove(id: number): Promise<Usuario> {
-    return await this.prisma.usuario.delete({ where: { id } });
+    try {
+    const user = await this.prisma.usuario.delete({ where: { id } });
+     if (!user) {
+      console.log("Nenhum item encontrado.")
+      throw new HttpException("Nenhum item encontrado", HttpStatus.NOT_FOUND);
+     } 
+     return user;
+  } catch(error) {
+    console.error(error);
+    throw new HttpException("Erro ao excluir, tente novamente", HttpStatus.BAD_REQUEST);
+  }
   }
 }

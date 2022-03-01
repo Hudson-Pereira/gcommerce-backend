@@ -82,7 +82,7 @@ export class ProdutoService {
     return prod;
     }catch(error){
       console.error(error)
-      throw new HttpException("Erro ao excluir, tente novamente", HttpStatus.BAD_REQUEST);
+      throw new HttpException("Erro ao excluir, tente novamente", HttpStatus.NOT_FOUND);
     }
   }
 
